@@ -7,12 +7,18 @@ import android.view.View;
 
 public class Game extends View {
     Paint paint = new Paint();
+    private Bitmap White;
+    private Bitmap Black;
+    public int SingelHeight = 64;
+    public int PanelWidth = 1080;
 
     public static final int BOARDSIZE = 17;
     public static final int WINNING = 5;
     private int[][] board;
     public boolean ended = false;
     public int winner = 0;
+
+
     public Game(Context context, AttributeSet attributes) {
         super(context, attributes);
         board = new int[BOARDSIZE][BOARDSIZE];
@@ -21,8 +27,51 @@ public class Game extends View {
                 j = 0;
             }
         }
+        init();
     }
 
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        for (int i = 0; i < BOARDSIZE; i++) {
+            int startX = (int) SingelHeight / 2;
+            int endX = (int) (PanelWidth - SingelHeight / 2);
+            int y = (int) ((0.5 + i) * SingelHeight);
+            canvas.drawLine(startX, y, endX, y, paint);
+            canvas.drawLine(y, startX, y, endX, paint);
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                switch (board[i][j]) {
+                    case 1:
+                        canvas.drawOval(i * SingelHeight, j * SingelHeight , i *SingelHeight+SingelHeight, j * SingelHeight + SingelHeight, paint);
+                        break;
+                    case 2:
+                        canvas.drawOval(i * SingelHeight, j * SingelHeight , i *SingelHeight+SingelHeight, j * SingelHeight + SingelHeight, paint);
+                        break;
+                }
+            }
+        }
+    }
+    public void onMeasure(int width, int height) {
+        int widthSize = MeasureSpec.getSize(width);
+        int widthMode = MeasureSpec.getMode(width);
+
+        int heightSize = MeasureSpec.getSize(height);
+        int heightMode = MeasureSpec.getMode(height);
+
+
+        setMeasuredDimension(1080, 1080);
+    }
+
+    private void init() {
+        paint = new Paint();
+        paint.setColor(0x88000000);
+        paint.setAntiAlias(true);
+        paint.setDither(true);
+        paint.setStyle(Paint.Style.FILL);
+        //White = BitmapFactory.decodeResource(getResources(), R.drawable.white);
+        //Black = BitmapFactory.decodeResource(getResources(), R.drawable.black);
+    }
     public int[][] getBoard() {
         return board;
     }
