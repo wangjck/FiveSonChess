@@ -3,30 +3,27 @@ package chess.son.five.fivesonchess;
 import android.content.Context;
 import android.graphics.*;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class Game extends View {
     Paint paint = new Paint();
     private Bitmap White;
     private Bitmap Black;
-    public int SingelHeight = 64;
+    public int SingelHeight = 72;
     public int PanelWidth = 1080;
 
-    public static final int BOARDSIZE = 17;
+    public static final int BOARDSIZE = 15;
     public static final int WINNING = 5;
     private int[][] board;
     public boolean ended = false;
     public int winner = 0;
+    public boolean isWhite = true;
 
 
     public Game(Context context, AttributeSet attributes) {
         super(context, attributes);
-        board = new int[BOARDSIZE][BOARDSIZE];
-        for (int[] i:board) {
-            for (int j:i) {
-                j = 0;
-            }
-        }
+
         init();
     }
 
@@ -39,6 +36,10 @@ public class Game extends View {
             canvas.drawLine(startX, y, endX, y, paint);
             canvas.drawLine(y, startX, y, endX, paint);
         }
+        if (ended) {
+            paint.setTextSize(100);
+            canvas.drawText("Player " + winner + " is the winner", 50,200,paint);
+        }
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
                 switch (board[i][j]) {
@@ -46,11 +47,12 @@ public class Game extends View {
                         canvas.drawOval(i * SingelHeight, j * SingelHeight , i *SingelHeight+SingelHeight, j * SingelHeight + SingelHeight, paint);
                         break;
                     case 2:
-                        canvas.drawOval(i * SingelHeight, j * SingelHeight , i *SingelHeight+SingelHeight, j * SingelHeight + SingelHeight, paint);
+                        canvas.drawRect(i * SingelHeight+5, j * SingelHeight+5 , i *SingelHeight+SingelHeight-5, j * SingelHeight + SingelHeight-5, paint);
                         break;
                 }
             }
         }
+
     }
     public void onMeasure(int width, int height) {
         int widthSize = MeasureSpec.getSize(width);
@@ -63,17 +65,24 @@ public class Game extends View {
         setMeasuredDimension(1080, 1080);
     }
 
-    private void init() {
+    public void init() {
+        board = new int[BOARDSIZE][BOARDSIZE];
+        for (int[] i:board) {
+            for (int j:i) {
+                j = 0;
+            }
+        }
+        ended = false;
+        winner = 0;
+        isWhite = true;
         paint = new Paint();
         paint.setColor(0x88000000);
         paint.setAntiAlias(true);
         paint.setDither(true);
         paint.setStyle(Paint.Style.FILL);
+        postInvalidate();
         //White = BitmapFactory.decodeResource(getResources(), R.drawable.white);
         //Black = BitmapFactory.decodeResource(getResources(), R.drawable.black);
-    }
-    public int[][] getBoard() {
-        return board;
     }
     public boolean move(int x, int y, int playerid) {
         if (x < 0 || y < 0 || x >= BOARDSIZE || y >= BOARDSIZE) {
@@ -147,6 +156,28 @@ public class Game extends View {
             winner = playerid;
             ended = true;
         }
+        return true;
+    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+        if (ended) {
+            return false;
+        }
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_UP) {
+            int x = (int)event.getX() / SingelHeight;
+            int y = (int)event.getY() / SingelHeight;
+            if (isWhite) {
+                if (move(x, y, 1)) {
+                    isWhite = !isWhite;
+                }
+            } else {
+                if (move(x, y, 2)) {
+                    isWhite = !isWhite;
+                }
+            }
+        }
+        postInvalidate();
         return true;
     }
 }

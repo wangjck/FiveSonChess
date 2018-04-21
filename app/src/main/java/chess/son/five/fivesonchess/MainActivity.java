@@ -9,15 +9,18 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    public static boolean isWhite = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Game game = (Game) findViewById(R.id.qwe123);
+        final Game game = (Game) findViewById(R.id.qwe123);
+        Button rematch = (Button) findViewById(R.id.button);
+        TextView tx = (TextView) findViewById(R.id.textView3);
         setSupportActionBar(toolbar);
 
        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -28,24 +31,26 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        game.postInvalidate();
-        game.move(0,0,1);
-        game.postInvalidate();
-        game.move(1,1,1);
-        game.postInvalidate();
-        game.move(2,2,1);
-        game.postInvalidate();
-        game.move(3,3,1);
-        if (game.ended && game.winner == 1) {
-            Log.d("nihao,","not bad");
+        rematch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                game.init();
+            }
+        });
+        /*
+        while (true) {
+            if (game.ended) {
+                tx.setText("Play " + game.winner + " won.");
+            }else {
+                tx.setText("");
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        game.postInvalidate();
-        game.move(4,4,1);
-        game.postInvalidate();
-        if (game.ended && game.winner == 1) {
-            Log.d("nihao,","not bad");
-        }
-
+        */
         /*
         while (!game.ended) {
             boolean next = false;
