@@ -1,12 +1,20 @@
 package chess.son.five.fivesonchess;
 
-public class Game {
-    public static final int BOARDSIZE = 19;
+import android.content.Context;
+import android.graphics.*;
+import android.util.AttributeSet;
+import android.view.View;
+
+public class Game extends View {
+    Paint paint = new Paint();
+
+    public static final int BOARDSIZE = 17;
     public static final int WINNING = 5;
     private int[][] board;
     public boolean ended = false;
     public int winner = 0;
-    public Game() {
+    public Game(Context context, AttributeSet attributes) {
+        super(context, attributes);
         board = new int[BOARDSIZE][BOARDSIZE];
         for (int[] i:board) {
             for (int j:i) {
