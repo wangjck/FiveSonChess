@@ -20,9 +20,14 @@ public class Game extends View {
     public int winner = 0;
     public boolean isWhite = true;
 
+    BitmapFactory.Options option = new BitmapFactory.Options();
+
+
 
     public Game(Context context, AttributeSet attributes) {
         super(context, attributes);
+        White = BitmapFactory.decodeResource(getResources(), R.drawable.whiteson);
+        Black = BitmapFactory.decodeResource(getResources(), R.drawable.blackson);
 
         init();
     }
@@ -44,10 +49,16 @@ public class Game extends View {
             for (int j = 0; j < board[0].length; j++) {
                 switch (board[i][j]) {
                     case 1:
-                        canvas.drawOval(i * SingelHeight, j * SingelHeight , i *SingelHeight+SingelHeight, j * SingelHeight + SingelHeight, paint);
+                        //canvas.drawOval(i * SingelHeight, j * SingelHeight , i *SingelHeight+SingelHeight, j * SingelHeight + SingelHeight, paint);
+                        canvas.drawBitmap(White,
+                                new Rect(0,0, White.getHeight(), White.getWidth()),
+                                new Rect(i * SingelHeight, j * SingelHeight , i *SingelHeight+SingelHeight, j * SingelHeight + SingelHeight), paint);
                         break;
                     case 2:
-                        canvas.drawRect(i * SingelHeight+5, j * SingelHeight+5 , i *SingelHeight+SingelHeight-5, j * SingelHeight + SingelHeight-5, paint);
+                        //canvas.drawRect(i * SingelHeight+5, j * SingelHeight+5 , i *SingelHeight+SingelHeight-5, j * SingelHeight + SingelHeight-5, paint);
+                        canvas.drawBitmap(Black,
+                                new Rect(0,0, Black.getHeight(), Black.getWidth()),
+                                new Rect(i * SingelHeight, j * SingelHeight , i *SingelHeight+SingelHeight, j * SingelHeight + SingelHeight), paint);
                         break;
                 }
             }
@@ -81,8 +92,7 @@ public class Game extends View {
         paint.setDither(true);
         paint.setStyle(Paint.Style.FILL);
         postInvalidate();
-        //White = BitmapFactory.decodeResource(getResources(), R.drawable.white);
-        //Black = BitmapFactory.decodeResource(getResources(), R.drawable.black);
+
     }
     public boolean move(int x, int y, int playerid) {
         if (x < 0 || y < 0 || x >= BOARDSIZE || y >= BOARDSIZE) {

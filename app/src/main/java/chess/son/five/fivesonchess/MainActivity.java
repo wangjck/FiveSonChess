@@ -1,15 +1,18 @@
 package chess.son.five.fivesonchess;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -26,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
 
     /** Request queue for our API requests. */
     private static RequestQueue requestQueue;
+    private Toolbar toolbar;
+    private ConstraintLayout layout;
+    private Game game;
+    private Button rematch;
+    private TextView tx;
 
     /** */
     private static final String API_KEY = "0d5fe03e9e9d465dd6da5db4194dbe57";
@@ -37,49 +45,21 @@ public class MainActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
 
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        final Game game = (Game) findViewById(R.id.qwe123);
-        Button rematch = (Button) findViewById(R.id.button);
-        TextView tx = (TextView) findViewById(R.id.textView3);
+        layout = (ConstraintLayout) findViewById(R.id.coordinatorLayout);
+        game = (Game) findViewById(R.id.qwe123);
+        rematch = (Button) findViewById(R.id.button);
+        tx = (TextView) findViewById(R.id.textView3);
         setSupportActionBar(toolbar);
 
-       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         rematch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 game.init();
                 startAPICall();
+
             }
         });
-        /*
-        while (true) {
-            if (game.ended) {
-                tx.setText("Play " + game.winner + " won.");
-            }else {
-                tx.setText("");
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        */
-        /*
-        while (!game.ended) {
-            boolean next = false;
-            while (!next) {
-                next = game.move( )
-            }
-        }
-        */
+        startAPICall();
     }
 
     @Override
@@ -104,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     void startAPICall() {
+        String s;
         try {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.GET,
@@ -115,6 +96,16 @@ public class MainActivity extends AppCompatActivity {
                         public void onResponse(final JSONObject response) {
                             try {
                                 Log.d("nihao", response.toString(2));
+                                if (response.toString(2).contains("clear")) {
+                                    layout.setBackgroundResource(R.drawable.back_sun);
+                                } else if (response.toString(2).contains("snow")) {
+                                     layout.setBackgroundResource(R.drawable.back_snow);
+                                } else if (response.toString(2).contains("rain")) {
+                                    layout.setBackgroundResource(R.drawable.back_rain);
+                                } else {
+                                    layout.setBackgroundResource(R.drawable.back_wind);
+                                }
+
                             } catch (JSONException ignored) { }
                         }
                     }, new Response.ErrorListener() {
@@ -127,10 +118,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
-    public String weather(final String json) {
-        JsonParser parser = new JsonParser();
-        JsonOject result
-    }
 }
